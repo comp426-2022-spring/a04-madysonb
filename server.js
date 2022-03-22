@@ -2,6 +2,11 @@
 const express = require('express')
 const app = express()
 
+"use strict";
+// Require better-sqlite.
+const Database = require('better-sqlite3');
+
+// Require minimist for argument handling
 const args = require("minimist")(process.argv.slice(2))
 args['port']
 args['help']
@@ -52,6 +57,11 @@ app.get('/app/flip/call/:guess(heads|tails)', (req, res) => {
 // Default response for any other request
 app.use(function (req, res) {
     res.status(404).send('404 NOT FOUND')
+});
+
+// Middleware
+app.use( (req, res, next) => {
+    // Your middleware goes here.
 });
 
 
