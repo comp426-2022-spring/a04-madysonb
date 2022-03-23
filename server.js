@@ -6,6 +6,7 @@ app.use(express.urlencoded({extended: true}))
 
 // require morgan
 const morgan = require('morgan')
+const fs = require('fs')
 
 "use strict";
 // Require better-sqlite.
