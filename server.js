@@ -5,6 +5,7 @@ const app = express()
 "use strict";
 // Require better-sqlite.
 const Database = require('better-sqlite3');
+const db = new Database('log.db');
 
 // Require minimist for argument handling
 const args = require("minimist")(process.argv.slice(2))
@@ -61,8 +62,16 @@ app.use(function (req, res) {
 
 // Middleware
 app.use( (req, res, next) => {
-    // Your middleware goes here.
+    const stmt = db.prepare(`
+        SELECT name FROM sqlite_master WHERE type='accesslog'`
+    );
 });
+
+
+
+
+
+
 
 
 // coin functions
