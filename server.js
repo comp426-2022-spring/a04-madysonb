@@ -13,6 +13,9 @@ const fs = require('fs')
 const Database = require('better-sqlite3');
 const db = new Database('log.db');
 
+
+
+
 // Require minimist for argument handling
 const args = require("minimist")(process.argv.slice(2))
 args['port']
@@ -38,6 +41,34 @@ const server = app.listen(HTTP_PORT, () => {
 
 // Middleware
 app.use( (req, res, next) => {
+    
+    const stmt = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='accesslog'`);
+    let row = stmt.get();
+
+    // init db
+    if (row === undefined) {
+        console.log('Log database appears to be empty. Creating log database...')
+    
+        const sqlInit = `
+            CREATE TABLE accesslog (
+                id INTEGER PRIMARY KEY,
+                remote_addr VARCHAR,
+                remote_user VARCHAR,
+                time VARCHAR, 
+                method VARCHAR,
+                url VARCHAR,
+                protocol VARCHAR,
+                http_version NUMERIC,
+                secure INTEGER,
+                status INTEGER,
+                referer VARCHAR,
+                user_agent VARCHAR
+            );
+        `
+    
+        logdb.exec(sqlInit);
+    }
+
     let logdata = {
         remoteaddr: req.ip,
         remoteuser: req.user,
@@ -52,8 +83,8 @@ app.use( (req, res, next) => {
         useragent: req.headers['user-agent']
     }
 
-    const stmt = db.prepare('INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url,  protocol, httpversion, secure, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    const entry = db.run(logdata.remoteaddr.toString(), logdata.remoteuser.toString(), logdata.time.toString(), logdata.method.toString(), logdata.url.toString(), logdata.protocol.toString(), logdata.httpversion.toString(), logdata.secure.toString(), logdata.status.toString(), logdata.referer.toString(), logdata.useragent.toString());
+    db.prepare('INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url,  protocol, httpversion, secure, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    db.run(Object.values(logdata));
     next();
 });
 
@@ -99,21 +130,15 @@ app.use(function (req, res) {
 // Debug endpoints
 if (DEBUG) {
     app.get('/app/log/access', (req, res) => {
-        if (DEBUG) {
+        try {
             res.status(200).send(db.prepare('SELECT * FROM accesslog').all())
-        }
-        else {
-            res.status(404).type("text/plain").send('404 NOT FOUND')
+        } catch(e) {
+            console.error(e)
         }
     });
 
     app.get('/app/error', (req, res) => {
-        if (DEBUG) {
-            throw new Error("Error")
-        }
-        else {
-            res.status(404).type("text/plain").send('404 NOT FOUND')
-        }
+        throw new Error('ERROR')
     });
 }
 
