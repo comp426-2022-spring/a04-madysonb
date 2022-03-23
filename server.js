@@ -1,6 +1,11 @@
 // Require Express.js
 const express = require('express')
 const app = express()
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+
+// require morgan
+const morgan = require('morgan')
 
 "use strict";
 // Require better-sqlite.
@@ -51,7 +56,11 @@ app.use( (req, res, next) => {
     next();
 });
 
-
+// logging
+if (LOG) {
+    const accessLog = fs.createWriteStream('access.log', { flags: 'a' });
+    app.use(morgan('combined', { stream: accessLog }));
+}
 
 
 // Define default endpoint
@@ -106,9 +115,6 @@ if (DEBUG) {
         }
     });
 }
-
-
-
 
 
 // coin functions
