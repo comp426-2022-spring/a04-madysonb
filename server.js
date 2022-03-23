@@ -14,8 +14,6 @@ const Database = require('better-sqlite3');
 const db = new Database('log.db');
 
 
-
-
 // Require minimist for argument handling
 const args = require("minimist")(process.argv.slice(2))
 args['port']
@@ -66,7 +64,7 @@ app.use( (req, res, next) => {
             );
         `
     
-        logdb.exec(sqlInit);
+        db.exec(sqlInit);
     }
 
     let logdata = {
