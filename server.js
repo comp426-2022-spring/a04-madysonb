@@ -29,6 +29,29 @@ const server = app.listen(HTTP_PORT, () => {
     console.log('App listening on port %PORT%'.replace('%PORT%', HTTP_PORT))
 });
 
+
+// Middleware
+app.use( (req, res, next) => {
+    let logdata = {
+        remoteaddr: req.ip,
+        remoteuser: req.user,
+        time: Date.now(),
+        method: req.method,
+        url: req.url,
+        protocol: req.protocol,
+        httpversion: req.httpVersion,
+        secure: req.secure,
+        status: res.statusCode,
+        referer: req.headers['referer'],
+        useragent: req.headers['user-agent']
+    }
+
+    const stmt = db.prepare('INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url,  protocol, httpversion, secure, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    const entry = db.run(logdata.remoteaddr.toString(), logdata.remoteuser, logdata.time, logdata.method.toString(), logdata.url.toString(), logdata.protocol.toString(), logdata.httpversion.toString(), logdata.secure.toString(), logdata.status.toString(), logdata.referer, logdata.useragent.toString());
+    next();
+});
+
+
 // Define default endpoint
 app.get('/app/', (req, res) => {
     // Respond with status 200
@@ -59,15 +82,6 @@ app.get('/app/flip/call/:guess(heads|tails)', (req, res) => {
 app.use(function (req, res) {
     res.status(404).send('404 NOT FOUND')
 });
-
-// Middleware
-app.use( (req, res, next) => {
-    const stmt = db.prepare(`
-        SELECT name FROM sqlite_master WHERE type='accesslog'`
-    );
-});
-
-
 
 
 
