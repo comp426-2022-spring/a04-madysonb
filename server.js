@@ -14,7 +14,7 @@ args['help']
 args['debug']
 args['log']
 
-const HTTP_PORT = args.port
+const HTTP_PORT = args.port || 5555
 const HELP = args.help
 const DEBUG = args.debug
 const LOG = args.log
@@ -47,9 +47,11 @@ app.use( (req, res, next) => {
     }
 
     const stmt = db.prepare('INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url,  protocol, httpversion, secure, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    const entry = db.run(logdata.remoteaddr.toString(), logdata.remoteuser, logdata.time, logdata.method.toString(), logdata.url.toString(), logdata.protocol.toString(), logdata.httpversion.toString(), logdata.secure.toString(), logdata.status.toString(), logdata.referer, logdata.useragent.toString());
+    const entry = db.run(logdata.remoteaddr.toString(), logdata.remoteuser.toString(), logdata.time.toString(), logdata.method.toString(), logdata.url.toString(), logdata.protocol.toString(), logdata.httpversion.toString(), logdata.secure.toString(), logdata.status.toString(), logdata.referer.toString(), logdata.useragent.toString());
     next();
 });
+
+
 
 
 // Define default endpoint
@@ -84,12 +86,32 @@ app.use(function (req, res) {
 });
 
 
+// Debug endpoints
+if (DEBUG) {
+    app.get('/app/log/access', (req, res) => {
+        if (DEBUG) {
+            res.status(200).send(db.prepare('SELECT * FROM accesslog').all())
+        }
+        else {
+            res.status(404).type("text/plain").send('404 NOT FOUND')
+        }
+    });
+
+    app.get('/app/error', (req, res) => {
+        if (DEBUG) {
+            throw new Error("Error")
+        }
+        else {
+            res.status(404).type("text/plain").send('404 NOT FOUND')
+        }
+    });
+}
+
 
 
 
 
 // coin functions
-
 function coinFlip() {
     return Math.random() > .5 ? "heads" : "tails"
 }
