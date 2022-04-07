@@ -77,14 +77,14 @@ app.use( (req, res, next) => {
         url: req.url,
         protocol: req.protocol,
         httpversion: req.httpVersion,
-        secure: req.secure,
-        status: res.statusCode,
+        secure: (req.secure) ? 1 : 0,
+        status: req.statusCode,
         referer: req.headers['referer'],
         useragent: req.headers['user-agent']
     }
-
-    db.prepare('INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url,  protocol, httpversion, secure, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    db.run(Object.values(logdata)); // fix
+    
+    const toLog = db.prepare('INSERT INTO accesslog (remote_addr, remote_user, time, method, url, protocol, http_version, secure, status, referer, user_agent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    toLog.run(Object.values(logdata)); 
     next();
 });
 
