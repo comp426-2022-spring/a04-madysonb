@@ -89,7 +89,7 @@ app.use( (req, res, next) => {
 });
 
 // logging
-if (true) {
+if (LOG) {
     const accessLog = fs.createWriteStream('access.log', { flags: 'a' });
     app.use(morgan('combined', { stream: accessLog }));
 }
