@@ -52,19 +52,20 @@ app.use( (req, res, next) => {
     
         const sqlInit = `
             CREATE TABLE accesslog (
-                remoteaddr VARCHAR,
-                remoteuser VARCHAR,
+                id INTEGER PRIMARY KEY,
+                remote_addr VARCHAR,
+                remote_user VARCHAR,
                 time VARCHAR, 
                 method VARCHAR,
                 url VARCHAR,
                 protocol VARCHAR,
-                httpversion NUMERIC,
+                http_version NUMERIC,
                 secure INTEGER,
                 status INTEGER,
                 referer VARCHAR,
-                useragent VARCHAR
+                user_agent VARCHAR
             );
-        `
+            `
     
         db.exec(sqlInit);
     }
