@@ -49,18 +49,17 @@ app.use( (req, res, next) => {
     
         const sqlInit = `
             CREATE TABLE accesslog (
-                id INTEGER PRIMARY KEY,
-                remote_addr VARCHAR,
-                remote_user VARCHAR,
+                remoteaddr VARCHAR,
+                remoteuser VARCHAR,
                 time VARCHAR, 
                 method VARCHAR,
                 url VARCHAR,
                 protocol VARCHAR,
-                http_version NUMERIC,
+                httpversion NUMERIC,
                 secure INTEGER,
                 status INTEGER,
                 referer VARCHAR,
-                user_agent VARCHAR
+                useragent VARCHAR
             );
         `
     
@@ -82,7 +81,7 @@ app.use( (req, res, next) => {
     }
 
     db.prepare('INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url,  protocol, httpversion, secure, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    db.run(Object.values(logdata));
+    db.run(Object.values(logdata)); // fix
     next();
 });
 
