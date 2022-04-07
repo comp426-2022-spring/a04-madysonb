@@ -89,7 +89,7 @@ app.use( (req, res, next) => {
 });
 
 // logging
-if (LOG) {
+if (true) {
     const accessLog = fs.createWriteStream('access.log', { flags: 'a' });
     app.use(morgan('combined', { stream: accessLog }));
 }
@@ -131,7 +131,7 @@ app.use(function (req, res) {
 if (DEBUG) {
     app.get('/app/log/access', (req, res) => {
         try {
-            res.status(200).send(db.prepare('SELECT * FROM accesslog').all())
+            res.status(200).json(db.prepare('SELECT * FROM accesslog').all())
         } catch(e) {
             console.error(e)
         }
