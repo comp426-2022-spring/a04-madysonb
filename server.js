@@ -40,8 +40,8 @@ if (args.help || args.h) {
 
 // logging
 if (args.log == true) {
-    const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
-    app.use(morgan('combined', { stream: WRITESTREAM }))
+    const accessLog = fs.createWriteStream('access.log', { flags: 'a' })
+    app.use(morgan('combined', { stream: accessLog }))
 }
 
 // Middleware
