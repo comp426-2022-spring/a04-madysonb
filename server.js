@@ -2,8 +2,8 @@
 const express = require('express')
 const app = express()
 const db = require("./database.js")
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+// app.use(express.json())
+// app.use(express.urlencoded({extended: true}))
 
 // require morgan
 const morgan = require('morgan')
@@ -79,14 +79,14 @@ app.get('/app/', (req, res, next) => {
 
 
 // Response and Request
+app.get('/app/flip', (req, res) => {
+    res.status(200).json({'flip': coinFlip()})
+});
+
 app.get('/app/flips/:number', (req, res) => {
     const flips = coinFlips(req.params.number)
     const count = countFlips(flips)
     res.status(200).json({ "raw": flips, "summary": count })
-});
-
-app.get('/app/flip', (req, res) => {
-    res.status(200).json({'flip': coinFlip()})
 });
 
 app.get('/app/flip/call/:guess(heads|tails)', (req, res) => {
