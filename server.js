@@ -65,7 +65,7 @@ app.use((req, res, next) => {
         protocol: req.protocol,
         httpversion: req.httpVersion,
         status: res.statusCode,
-        referer: req.headers["referer"],
+        referrer: req.headers["referer"],
         useragent: req.headers["user-agent"],
     };
 
