@@ -13,7 +13,6 @@ if (row === undefined) {
 
     const sqlInit = `
         CREATE TABLE accesslog (
-            id INTEGER PRIMARY KEY
             remoteaddr VARCHAR,
             remoteuser VARCHAR,
             time VARCHAR, 
