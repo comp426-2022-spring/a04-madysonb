@@ -60,11 +60,10 @@ app.use( (req, res, next) => {
     
     const toLog = db.prepare('INSERT INTO accesslog (remote_addr, remote_user, time, method, url, protocol, http_version, secure, status, referer, user_agent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
     // toLog.run(Object.values(logdata)); 
-    const info = stmt.run(logdata.remote_addr, logdata.remote_user, logdata.time, logdata.method, logdata.url, logdata.protocol, logdata.http_version, logdata.secure ? 1 : 0, logdata.status, logdata.referer, logdata.user_agent);
+    toLog.run(logdata.remote_addr, logdata.remote_user, logdata.time, logdata.method, logdata.url, logdata.protocol, logdata.http_version, logdata.secure ? 1 : 0, logdata.status, logdata.referer, logdata.user_agent);
     res.status(200);
     next();
 });
-
 
 
 // Define default endpoint
