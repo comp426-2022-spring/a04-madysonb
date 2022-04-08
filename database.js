@@ -30,3 +30,5 @@ if (row === undefined) {
 
     db.exec(sqlInit);
 }
+
+module.exports = db
