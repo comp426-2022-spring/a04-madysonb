@@ -16,12 +16,12 @@ if (row === undefined) {
             id INTEGER PRIMARY KEY, 
             remoteaddr TEXT,
             remoteuser TEXT,
-            time TEXT,
+            time INTEGER,
             method TEXT,
             url TEXT,
             protocol TEXT,
             httpversion TEXT,
-            status TEXT, 
+            status INTEGER, 
             referer TEXT,
             useragent TEXT
         );`

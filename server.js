@@ -46,9 +46,7 @@ if (args.help || args.h) {
 }
 
 // logging
-if (args.log == 'false') {
-    console.log('log false')
-} else {
+if (args.log == true) {
     const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
     app.use(morgan('combined', { stream: WRITESTREAM }))
 }
@@ -168,4 +166,10 @@ if (args.debug) {
 // Default response for any other request
 app.use(function (req, res) {
     res.status(404).send('404 NOT FOUND')
+});
+
+process.on('SIGTERM', () => {
+    server.close(() => {
+        console.log('Server stopped')
+    })
 });
