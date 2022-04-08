@@ -2,8 +2,8 @@
 const express = require('express')
 const app = express()
 const db = require("./database.js")
-// app.use(express.json())
-// app.use(express.urlencoded({extended: true}))
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
 
 // require morgan
 const morgan = require('morgan')
@@ -58,11 +58,10 @@ app.use((req, res, next) => {
     };
 
     const stmt = db.prepare(
-        "INSERT INTO accesslog (id, remoteaddr, remoteuser, time, method, url, protocol, httpversion, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        "INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     );
 
     const info = stmt.run(
-        1,
         logdata.remoteaddr,
         logdata.remoteuser,
         logdata.time,
