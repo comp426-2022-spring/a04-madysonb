@@ -46,17 +46,17 @@ const server = app.listen(HTTP_PORT, () => {
 app.use( (req, res, next) => {
 
     let logdata = {
-        remoteaddr: req.ip,
-        remoteuser: req.user,
+        remote_addr: req.ip,
+        remote_user: req.user,
         time: Date.now(),
         method: req.method,
         url: req.url,
         protocol: req.protocol,
-        httpversion: req.httpVersion,
+        http_version: req.httpVersion,
         secure: (req.secure) ? 1 : 0,
         status: req.statusCode,
         referer: req.headers['referer'],
-        useragent: req.headers['user-agent']
+        user_agent: req.headers['user-agent']
     }
     
     const toLog = db.prepare('INSERT INTO accesslog (remote_addr, remote_user, time, method, url, protocol, http_version, secure, status, referer, user_agent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
