@@ -37,8 +37,8 @@ const server = app.listen(HTTP_PORT, () => {
 
 // logging
 if (LOG) {
-    const accessLog = fs.createWriteStream('access.log', { flags: 'a' });
-    app.use(morgan('combined', { stream: accessLog }));
+    const WRITESTREAM  = fs.createWriteStream('access.log', { flags: 'a' })
+    app.use(morgan('combined', { stream: WRITESTREAM }))
 }
 
 // Middleware
@@ -52,15 +52,14 @@ app.use( (req, res, next) => {
         url: req.url,
         protocol: req.protocol,
         httpversion: req.httpVersion,
-        secure: req.secure,
         status: req.statusCode,
         referer: req.headers['referer'],
         useragent: req.headers['user-agent']
     }
     
-    const toLog = db.prepare('INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, secure, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    const toLog = db.prepare('INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
     // toLog.run(Object.values(logdata)); 
-    toLog.run(logdata.remoteaddr, logdata.remoteuser, logdata.time, logdata.method, logdata.url, logdata.protocol, logdata.httpversion, logdata.secure ? 1 : 0, logdata.status, logdata.referer, logdata.useragent);
+    toLog.run(logdata.remoteaddr, logdata.remoteuser, logdata.time, logdata.method, logdata.url, logdata.protocol, logdata.httpversion, logdata.status, logdata.referer, logdata.useragent);
     res.status(200);
     next();
 });

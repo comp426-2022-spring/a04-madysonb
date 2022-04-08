@@ -20,8 +20,7 @@ if (row === undefined) {
             method TEXT, 
             url TEXT, 
             protocol TEXT,
-            httpversion TEXT, 
-            secure TEXT, 
+            httpversion TEXT,  
             status INTEGER, 
             referer TEXT, 
             useragent TEXT
