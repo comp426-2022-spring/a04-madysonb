@@ -13,17 +13,17 @@ if (row === undefined) {
 
     const sqlInit = `
         CREATE TABLE IF NOT EXISTS accesslog ( 
-          id INTEGER PRIMARY KEY, 
-          remoteaddr VARCHAR, 
-          remoteuser VARCHAR, 
-          time NUMERIC, 
-          method VARCHA, 
-          url VARCHAR, 
-          protocol VARCHAR, 
-          httpversion VARCHAR,   
-          status INTEGER, 
-          referer VARCHAR, 
-          useragent VARCHAR );
+            id INTEGER PRIMARY KEY, 
+            remoteaddr VARCHAR, 
+            remoteuser VARCHAR, 
+            time NUMERIC, 
+            method VARCHA, 
+            url VARCHAR, 
+            protocol VARCHAR, 
+            httpversion VARCHAR,   
+            status INTEGER, 
+            referer VARCHAR, 
+            useragent VARCHAR );
     `;
 
     db.exec(sqlInit);

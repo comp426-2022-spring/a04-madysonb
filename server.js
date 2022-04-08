@@ -57,12 +57,9 @@ app.use((req, res, next) => {
         useragent: req.headers["user-agent"],
     };
 
-    const stmt = db.prepare(
-        "INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-    );
 
-    const info = stmt.run(
-        logdata.remoteaddr,
+    const sqlInit = `
+    INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, status, referer, useragent) VALUES (logdata.remoteaddr,
         logdata.remoteuser,
         logdata.time,
         logdata.method,
@@ -71,9 +68,9 @@ app.use((req, res, next) => {
         logdata.httpversion,
         logdata.status,
         logdata.referer,
-        logdata.useragent
-    );
+        logdata.useragent)`;
 
+    db.exec(sqlInit);
     next();
 });
 
