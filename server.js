@@ -2,7 +2,6 @@
 const express = require('express')
 const app = express()
 const db = require("./database.js")
-app.use(morgan("tiny"));
 // app.use(express.json())
 // app.use(express.urlencoded({extended: true}))
 
