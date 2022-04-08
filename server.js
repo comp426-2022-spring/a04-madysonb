@@ -2,6 +2,7 @@
 const express = require('express')
 const app = express()
 const db = require("./database.js")
+app.use(morgan("tiny"));
 // app.use(express.json())
 // app.use(express.urlencoded({extended: true}))
 
@@ -37,12 +38,12 @@ const server = app.listen(HTTP_PORT, () => {
 
 // logging
 if (LOG) {
-    const WRITESTREAM  = fs.createWriteStream('access.log', { flags: 'a' })
+    const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
     app.use(morgan('combined', { stream: WRITESTREAM }))
 }
 
 // Middleware
-app.use( (req, res, next) => {
+app.use((req, res, next) => {
 
     let logdata = {
         remoteaddr: req.ip,
@@ -52,17 +53,41 @@ app.use( (req, res, next) => {
         url: req.url,
         protocol: req.protocol,
         httpversion: req.httpVersion,
-        secure: req.secure,
-        referer: req.headers['referer'],
-        useragent: req.headers['user-agent']
-    }
-    
-    const toLog = db.prepare('INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    // toLog.run(Object.values(logdata)); 
-    const info = toLog.run(logdata.remoteaddr, logdata.remoteuser, logdata.time, logdata.method, logdata.url, logdata.protocol, logdata.httpversion, logdata.status, logdata.referer, logdata.useragent);
+        status: res.statusCode,
+        referer: req.headers["referer"],
+        useragent: req.headers["user-agent"],
+    };
+
+    const stmt = db.prepare(
+        "INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    );
+
+    const info = stmt.run(
+        logdata.remoteaddr,
+        logdata.remoteuser,
+        logdata.time,
+        logdata.method,
+        logdata.url,
+        logdata.protocol,
+        logdata.httpversion,
+        logdata.status,
+        logdata.referer,
+        logdata.useragent
+    );
+
     next();
 });
 
+// Debug endpoints
+if (DEBUG) {
+    app.get('/app/log/access', (req, res) => {
+        const stmt = db.prepare("SELECT * FROM accesslog").all();
+        res.status(200).send(stmt);
+    });
+    app.get("/app/error", (req, res) => {
+        throw new Error("Error Test Successful.");
+    });
+}
 
 // Define default endpoint
 app.get('/app/', (req, res, next) => {
@@ -77,7 +102,7 @@ app.get('/app/', (req, res, next) => {
 
 // Response and Request
 app.get('/app/flip', (req, res) => {
-    res.status(200).json({'flip': coinFlip()})
+    res.status(200).json({ 'flip': coinFlip() })
 });
 
 app.get('/app/flips/:number', (req, res) => {
@@ -91,22 +116,6 @@ app.get('/app/flip/call/:guess(heads|tails)', (req, res) => {
     res.status(200).json(game)
 });
 
-
-// Debug endpoints
-if (DEBUG) {
-    app.get('/app/log/access', (req, res) => {
-        try {
-            const stmt = db.prepare('SELECT * FROM accesslog').all()
-            res.status(200).send(stmt)
-        } catch {
-            console.error(e)
-        }
-    });
-
-    app.get('/app/error', (req, res) => {
-        throw new Error("Error test successful");
-    });
-}
 
 
 // Default response for any other request
