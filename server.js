@@ -148,7 +148,7 @@ app.get('/app/flip/call/:guess(heads|tails)', (req, res) => {
 // Debug endpoints
 if (args.debug) {
     app.get('/app/log/access', (req, res) => {
-        const stmt = db.prepare("SELECT * FROM accesslogs").all();
+        const stmt = db.prepare("SELECT * FROM accesslog").all();
         res.status(200).json(stmt);
     });
     app.get("/app/error", (req, res) => {
