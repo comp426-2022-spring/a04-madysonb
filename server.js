@@ -52,7 +52,7 @@ app.use( (req, res, next) => {
         url: req.url,
         protocol: req.protocol,
         httpversion: req.httpVersion,
-        secure: (req.secure) ? 1 : 0,
+        secure: req.secure,
         status: req.statusCode,
         referer: req.headers['referer'],
         useragent: req.headers['user-agent']
