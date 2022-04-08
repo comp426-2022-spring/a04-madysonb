@@ -96,6 +96,22 @@ if (LOG) {
 }
 
 
+// Debug endpoints
+if (DEBUG) {
+    app.get('/app/log/access', (req, res) => {
+        try {
+            res.status(200).json(db.prepare('SELECT * FROM accesslog').all())
+        } catch(e) {
+            console.error(e)
+        }
+    });
+
+    app.get('/app/error', (req, res) => {
+        throw new Error('ERROR')
+    });
+}
+
+
 // Define default endpoint
 app.get('/app/', (req, res) => {
     // Respond with status 200
@@ -105,6 +121,7 @@ app.get('/app/', (req, res) => {
     res.writeHead(res.statusCode, { 'Content-Type': 'text/plain' });
     res.end(res.statusCode + ' ' + res.statusMessage)
 });
+
 
 // Response and Request
 app.get('/app/flips/:number', (req, res) => {
@@ -122,26 +139,12 @@ app.get('/app/flip/call/:guess(heads|tails)', (req, res) => {
     res.status(200).json(game)
 });
 
+
 // Default response for any other request
 app.use(function (req, res) {
     res.status(404).send('404 NOT FOUND')
 });
 
-
-// Debug endpoints
-if (DEBUG) {
-    app.get('/app/log/access', (req, res) => {
-        try {
-            res.status(200).json(db.prepare('SELECT * FROM accesslog').all())
-        } catch(e) {
-            console.error(e)
-        }
-    });
-
-    app.get('/app/error', (req, res) => {
-        throw new Error('ERROR')
-    });
-}
 
 
 // coin functions
