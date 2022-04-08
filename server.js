@@ -13,7 +13,7 @@ const fs = require('fs')
 // Require minimist for argument handling
 const args = require("minimist")(process.argv.slice(2), {
     boolean: ['debug', 'log'],
-    default: { debug: false, log: true }
+    default: { port: 5555, debug: false, log: true }
 })
 args['port']
 args['help']
