@@ -73,7 +73,7 @@ app.use((req, res, next) => {
         logdata.referer,
         logdata.useragent
     );
-    res.status(200).json(info)
+
     next();
 });
 
