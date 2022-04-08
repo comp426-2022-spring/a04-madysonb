@@ -11,16 +11,9 @@ const fs = require('fs')
 
 
 // Require minimist for argument handling
-const args = require("minimist")(process.argv.slice(2), {
-    boolean: ['debug', 'log'],
-    default: { port: 5555, debug: false, log: true }
-})
-args['port']
-args['help']
-args['debug']
-args['log']
+const args = require("minimist")(process.argv.slice(2))
 
-const port = args.port || args.p || 5555
+const port = args.port || process.env.PORT || 5555
 
 // Start an app server
 const server = app.listen(port, () => {
