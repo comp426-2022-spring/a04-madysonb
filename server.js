@@ -30,16 +30,16 @@ if (HELP) {
     process.exit(0)
 }
 
-// Start an app server
-const server = app.listen(HTTP_PORT, () => {
-    console.log('App listening on port %PORT%'.replace('%PORT%', HTTP_PORT))
-});
-
 // logging
 if (LOG) {
     const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
     app.use(morgan('combined', { stream: WRITESTREAM }))
 }
+
+// Start an app server
+const server = app.listen(HTTP_PORT, () => {
+    console.log('App listening on port %PORT%'.replace('%PORT%', HTTP_PORT))
+});
 
 // Middleware
 app.use((req, res, next) => {
@@ -89,7 +89,7 @@ if (DEBUG) {
 }
 
 // Define default endpoint
-app.get('/app/', (req, res, next) => {
+app.get('/app/', (req, res) => {
     // Respond with status 200
     res.statusCode = 200;
     // Respond with status message "OK"

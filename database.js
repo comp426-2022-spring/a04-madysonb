@@ -4,12 +4,12 @@ const Database = require('better-sqlite3');
 const db = new Database('log.db');
 
 
-const stmt = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='accesslog'`);
+const stmt = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='accesslog';`);
 let row = stmt.get();
 
 // init db
 if (row === undefined) {
-    console.log('Log database appears to be empty. Creating log database...')
+    console.log('Log database is empty. Creating log database...')
 
     const sqlInit = `
         CREATE TABLE accesslog ( 
@@ -27,6 +27,8 @@ if (row === undefined) {
     `;
 
     db.exec(sqlInit);
+} else {
+    console.log("Database exists");
 }
 
-module.exports = db
+module.exports = db;
