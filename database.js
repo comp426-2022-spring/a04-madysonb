@@ -12,19 +12,19 @@ if (row === undefined) {
     console.log('Log database is empty. Creating log database...')
 
     const sqlInit = `
-        CREATE TABLE IF NOT EXISTS accesslog ( 
+        CREATE TABLE accesslog ( 
             id INTEGER PRIMARY KEY, 
-            remoteaddr VARCHAR, 
-            remoteuser VARCHAR, 
-            time NUMERIC, 
-            method VARCHA, 
-            url VARCHAR, 
-            protocol VARCHAR, 
-            httpversion VARCHAR,   
-            status INTEGER, 
-            referer VARCHAR, 
-            useragent VARCHAR );
-    `;
+            remoteaddr TEXT,
+            remoteuser TEXT,
+            time TEXT,
+            method TEXT,
+            url TEXT,
+            protocol TEXT,
+            httpversion TEXT,
+            status TEXT, 
+            referrer TEXT,
+            useragent TEXT
+        );`
 
     db.exec(sqlInit);
 } else {
