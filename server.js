@@ -30,6 +30,12 @@ if (HELP) {
     process.exit(0)
 }
 
+// logging
+if (LOG) {
+    const accessLog = fs.createWriteStream('access.log', { flags: 'a' });
+    app.use(morgan('combined', { stream: accessLog }));
+}
+
 // Start an app server
 const server = app.listen(HTTP_PORT, () => {
     console.log('App listening on port %PORT%'.replace('%PORT%', HTTP_PORT))
@@ -58,31 +64,22 @@ app.use( (req, res, next) => {
     next();
 });
 
-// logging
-if (LOG) {
-    const accessLog = fs.createWriteStream('access.log', { flags: 'a' });
-    app.use(morgan('combined', { stream: accessLog }));
-}
-
 
 // Debug endpoints
 if (DEBUG) {
-    app.get('/app/log/access', (req, res) => {
-        try {
-            res.status(200).json(db.prepare('SELECT * FROM accesslog').all())
-        } catch(e) {
-            console.error(e)
-        }
+    app.get('/app/log/access', (req, res, next) => {
+        const stmt = db.prepare('SELECT * FROM accesslog').all()
+        res.status(200).json(stmt)
     });
 
-    app.get('/app/error', (req, res) => {
+    app.get('/app/error', (req, res, next) => {
         throw new Error('ERROR')
     });
 }
 
 
 // Define default endpoint
-app.get('/app/', (req, res) => {
+app.get('/app/', (req, res, next) => {
     // Respond with status 200
     res.statusCode = 200;
     // Respond with status message "OK"
