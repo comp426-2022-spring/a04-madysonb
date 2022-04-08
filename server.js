@@ -45,22 +45,22 @@ if (LOG) {
 app.use( (req, res, next) => {
 
     let logdata = {
-        remote_addr: req.ip,
-        remote_user: req.user,
+        remoteaddr: req.ip,
+        remoteuser: req.user,
         time: Date.now(),
         method: req.method,
         url: req.url,
         protocol: req.protocol,
-        http_version: req.httpVersion,
+        httpversion: req.httpVersion,
         secure: (req.secure) ? 1 : 0,
         status: req.statusCode,
         referer: req.headers['referer'],
-        user_agent: req.headers['user-agent']
+        useragent: req.headers['user-agent']
     }
     
-    const toLog = db.prepare('INSERT INTO accesslog (remote_addr, remote_user, time, method, url, protocol, http_version, secure, status, referer, user_agent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    const toLog = db.prepare('INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, secure, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
     // toLog.run(Object.values(logdata)); 
-    toLog.run(logdata.remote_addr, logdata.remote_user, logdata.time, logdata.method, logdata.url, logdata.protocol, logdata.http_version, logdata.secure ? 1 : 0, logdata.status, logdata.referer, logdata.user_agent);
+    toLog.run(logdata.remoteaddr, logdata.remoteuser, logdata.time, logdata.method, logdata.url, logdata.protocol, logdata.httpversion, logdata.secure ? 1 : 0, logdata.status, logdata.referer, logdata.useragent);
     res.status(200);
     next();
 });
