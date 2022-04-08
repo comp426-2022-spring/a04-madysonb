@@ -2,8 +2,8 @@
 const express = require('express')
 const app = express()
 const db = require("./database.js")
-app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
 // require morgan
 const morgan = require('morgan')
@@ -20,11 +20,11 @@ args['help']
 args['debug']
 args['log']
 
-const HTTP_PORT = args.port || process.env.PORT || 5555
+const port = args.port || args.p || 5555
 
 // Start an app server
-const server = app.listen(HTTP_PORT, () => {
-    console.log('App listening on port %PORT%'.replace('%PORT%', HTTP_PORT))
+const server = app.listen(port, () => {
+    console.log('App listening on port %PORT%'.replace('%PORT%', port))
 });
 
 const help = (`
