@@ -1,17 +1,13 @@
 // Require Express.js
 const express = require('express')
 const app = express()
+const db = require("./database.js")
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 // require morgan
 const morgan = require('morgan')
 const fs = require('fs')
-
-"use strict";
-// Require better-sqlite.
-const Database = require('better-sqlite3');
-const db = new Database('log.db');
 
 
 // Require minimist for argument handling
@@ -42,33 +38,6 @@ const server = app.listen(HTTP_PORT, () => {
 
 // Middleware
 app.use( (req, res, next) => {
-    
-    const stmt = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='accesslog'`);
-    let row = stmt.get();
-
-    // init db
-    if (row === undefined) {
-        console.log('Log database appears to be empty. Creating log database...')
-    
-        const sqlInit = `
-            CREATE TABLE accesslog (
-                id INTEGER PRIMARY KEY,
-                remote_addr VARCHAR,
-                remote_user VARCHAR,
-                time VARCHAR, 
-                method VARCHAR,
-                url VARCHAR,
-                protocol VARCHAR,
-                http_version NUMERIC,
-                secure INTEGER,
-                status INTEGER,
-                referer VARCHAR,
-                user_agent VARCHAR
-            );
-            `
-    
-        db.exec(sqlInit);
-    }
 
     let logdata = {
         remoteaddr: req.ip,
